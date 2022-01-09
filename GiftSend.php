@@ -26,7 +26,9 @@ class GiftSend
     protected static array $room_list = [];
     protected static array $medal_list = [];
 
-
+    /**
+     * @use run
+     */
     public static function run()
     {
         if (self::getLock() > time()) {
@@ -68,7 +70,7 @@ class GiftSend
             }
             $current_intimacy = 0;
             foreach ($bag_list as $gift) {
-                // 是辣条、亿元、小心心 && 不是过期礼物
+                // 是辣条、亿元 && 不是过期礼物 加入小心心，暂不清楚是否有逻辑冲突
                 if (!in_array($gift['gift_id'], [1, 6, 30607])) {
                     continue;
                 }
@@ -142,7 +144,7 @@ class GiftSend
                 if ($vo['corner_mark'] == '永久') {
                     continue;
                 }
-                array_push($new_bag_list, $vo);
+                $new_bag_list[] = $vo;
             }
         }
         return $new_bag_list;
@@ -158,7 +160,7 @@ class GiftSend
         $expire_gift_list = [];
         foreach ($bag_list as $gift) {
             if ($gift['expire_at'] >= time() && $gift['expire_at'] <= time() + 3600) {
-                array_push($expire_gift_list, $gift);
+                $expire_gift_list[] = $gift;
             }
         }
         return $expire_gift_list;
@@ -173,7 +175,8 @@ class GiftSend
         $data = Live::fetchMedalList();
         $fans_medals = [];
         foreach ($data as $vo) {
-            if (!isset($vo['roomid'])) continue;
+            // 过滤主站勋章
+            if (!isset($vo['roomid']) || $vo['roomid'] == 0) continue;
             $fans_medals[(string)$vo['roomid']] = $vo;
         }
         // 基于配置
