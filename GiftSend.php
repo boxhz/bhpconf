@@ -29,7 +29,7 @@ class GiftSend
     /**
      * @use run
      */
-    public static function run()
+    public static function run(): void
     {
         if (self::getLock() > time()) {
             return;
@@ -93,7 +93,7 @@ class GiftSend
     /**
      * @use 方案2
      */
-    protected static function procTwo()
+    protected static function procTwo(): void
     {
         $bag_list = self::fetchBagList();
         $expire_gift = self::checkExpireGift($bag_list);
@@ -169,7 +169,7 @@ class GiftSend
     /**
      * @use 获取勋章列表(过滤无勋章或已满)
      */
-    protected static function getMedalList()
+    protected static function getMedalList(): void
     {
         self::$medal_list = [];
         $data = Live::fetchMedalList();
@@ -196,7 +196,7 @@ class GiftSend
     /**
      * @use 获取UID
      */
-    protected static function getUserInfo()
+    protected static function getUserInfo(): void
     {
         $url = 'https://api.live.bilibili.com/xlive/web-ucenter/user/get_user_info';
         $payload = [];
@@ -214,7 +214,7 @@ class GiftSend
     /**
      * @use 获取直播间信息
      */
-    protected static function getRoomInfo()
+    protected static function getRoomInfo(): void
     {
         Log::info('正在生成直播间信息...');
         $room_id = empty(self::$tid) ? getConf('room_id', 'global_room') : self::$tid;
@@ -257,7 +257,7 @@ class GiftSend
      * @param array $value
      * @param int $amt
      */
-    protected static function sendGift(array $value, int $amt)
+    protected static function sendGift(array $value, int $amt): void
     {
         $url = 'https://api.live.bilibili.com/gift/v2/live/bag_send';
         $payload = [
